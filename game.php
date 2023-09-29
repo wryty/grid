@@ -1,5 +1,5 @@
-
 <?php
+include 'player.php';
 class Game {
     private Player $playerUser;
     private Player $playerBot;
