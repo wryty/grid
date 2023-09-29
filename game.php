@@ -122,30 +122,31 @@ class Game {
         }
     }
 
+    private function rubyByOrder(Player $player, array $stones, Stone $stone) {
+        if (endsWith($stone->Name,"самородок")) {
+            echo "ЗОЛОТО! {$player->Name} достал золотой самородок. Игра с рубином закончена\n";
+            $key = array_search($stone, $stones);
+            if ($key !== false) {
+                unset($stones[$key]);
+            }
+            $player->addStoneToTable($stone);
+            return true;
+        }
+        return false;
+    }
+
     private function rubyGame() {
         $stonesUser = [];
         $stonesBot = [];
         while (true) {
             $first = $this->playerUser->pickStone();
             $stonesUser[] = $first;
-            if (endsWith($first->Name, "самородок")) {
-                echo "ЗОЛОТО! {$this->playerUser->Name} достал золотой самородок. Игра с рубином закончена\n";
-                $key = array_search($first, $stonesBot);
-                if ($key !== false) {
-                    unset($stonesBot[$key]);
-                }
-                $this->playerUser->addStoneToTable($first);
+            if ($this->rubyByOrder($this->playerUser, $stonesUser, $first)) {
                 break;
             }
             $second = $this->playerBot->pickStone();
             $stonesBot[] = $second;
-            if (endsWith($second->Name,"самородок")) {
-                echo "ЗОЛОТО! {$this->playerBot->Name} достал золотой самородок. Игра с рубином закончена\n";
-                $key = array_search($second, $stonesBot);
-                if ($key !== false) {
-                    unset($stonesBot[$key]);
-                }
-                $this->playerBot->addStoneToTable($second);
+            if ($this->rubyByOrder($this->playerBot, $stonesBot, $second)) {
                 break;
             }
         }
